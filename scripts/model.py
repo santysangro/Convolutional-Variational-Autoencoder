@@ -3,7 +3,6 @@ import torch
 from torch import nn
 
 
-
 class VariationalAutoEncoder(nn.Module):
     def __init__(self, image_size, z_dim=128):
         super(VariationalAutoEncoder, self).__init__()
@@ -62,4 +61,3 @@ class VariationalAutoEncoder(nn.Module):
         z_reparametrized = mu + sd * epsilon
         x_reconstructed = self.decode(z_reparametrized)
         return x_reconstructed, mu, sd
-

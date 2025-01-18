@@ -34,7 +34,7 @@ attribute_to_index = {attr: idx for idx, attr in enumerate(attributes_arr)}
 
 
 # Define inference function
-def inference(model, num_examples=5, attribute="Bald"):
+def inference(model, num_examples=5, attribute=None):
     with torch.no_grad():
         for example in range(num_examples):
             idx = np.random.randint(0, len(dataset))  # Random index from dataset
