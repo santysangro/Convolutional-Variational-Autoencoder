@@ -7,7 +7,7 @@ This repository contains an implementation of a Convolutional Variational Autoen
 - Trained on CelebA dataset
 - Customizable hyperparameters for flexibility
 - Progress tracking with `tqdm`
-- Possible to specify inference parameter attribute in order to generate images with one of the 40 specified attributes form the dataset.  
+- Possible to specify parameter "attribute" in order to generate images with one of the 40 specified attributes form the dataset.  
 ## Installation
 
 1. Clone the repository:
