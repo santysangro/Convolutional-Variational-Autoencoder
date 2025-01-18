@@ -7,7 +7,7 @@ This repository contains an implementation of a Convolutional Variational Autoen
 - Trained on CelebA dataset
 - Customizable hyperparameters for flexibility
 - Progress tracking with `tqdm`
-
+- Possible to specify inference parameter attribute in order to generate images with one of the 40 specified attributes form the dataset.  
 ## Installation
 
 1. Clone the repository:
@@ -16,7 +16,7 @@ This repository contains an implementation of a Convolutional Variational Autoen
    cd Convolutional-Variational-Autoencoder  
    pip install -r requirements.txt 
    python scripts/train.py #To train the model
-   python scripts/inference.py --num-images 5 #To generate images
+   python scripts/inference.py --num-images 5 --attribute Similing #To generate images
 
 
 ## Dataset

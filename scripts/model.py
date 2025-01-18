@@ -3,7 +3,7 @@ import torch
 from torch import nn
 
 
-# Input image --> hidden dimension --> mean, sd --> Parametrization trick --> decoder --> output dim
+
 class VariationalAutoEncoder(nn.Module):
     def __init__(self, image_size, z_dim=128):
         super(VariationalAutoEncoder, self).__init__()
@@ -19,7 +19,6 @@ class VariationalAutoEncoder(nn.Module):
         )
 
         hid_dim = image_size * 16 * 16
-        # This will push it towards standard gaussian
         self.hd_to_mean = nn.Linear(hid_dim, z_dim)
         self.hd_to_sd = nn.Linear(hid_dim, z_dim)
 
@@ -57,6 +56,7 @@ class VariationalAutoEncoder(nn.Module):
         return self.decoder(z)
 
     def forward(self, x):
+        # Input image --> hidden dimension --> mean, sd --> Parametrization trick --> decoder --> output dim
         mu, sd = self.encode(x)
         epsilon = torch.randn_like(sd)
         z_reparametrized = mu + sd * epsilon

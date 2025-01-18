@@ -14,37 +14,38 @@ NUM_EPOCHS = 10
 BATCH_SIZE = 32
 LR_RATE = 3e-4  # Karpathy constant
 a = 1
-b = 0.7  # weights of loss functions
+b = 0.7  # Weights of loss functions
+
 device = torch.device("mps" if torch.backends.mps.is_built() else "cpu")
 print(f"Model is running on: {device}")
+
 transform = transforms.Compose([
-    transforms.Resize((IMAGE_SIZE, IMAGE_SIZE)),  # Resize images to 64x64
+    transforms.Resize((IMAGE_SIZE, IMAGE_SIZE)),  # Resize images to 128x128
     transforms.ToTensor(),
     transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5])  # Normalize to [-1, 1] instead of [0,255]
 ])
 dataset = datasets.CelebA(root="../dataset/", split="train", transform=transform, download=True)
 
 
-# Dataset Loading
+
 def train():
+    # Dataset Loading
     train_loader = DataLoader(dataset=dataset, batch_size=BATCH_SIZE, shuffle=True)
     model = VariationalAutoEncoder(IMAGE_SIZE, Z_DIM).to(device)
     optimizer = optim.Adam(model.parameters(), lr=LR_RATE)
     loss_fn = nn.BCELoss(reduction="sum")
-
     for epoch in range(NUM_EPOCHS):
         loop = tqdm(enumerate(train_loader), total=len(train_loader), desc=f"Epoch {epoch + 1}/{NUM_EPOCHS}", ncols=100,
                     dynamic_ncols=True)
         for i, (x, _) in loop:
             x = x.to(device)
             x_reconstructed, mu, sd = model.forward(x)
-            # compute loss
-            x = (x + 1) / 2  # DENORMALIZE
+            x = (x + 1) / 2  # Denormalize
             reconstruction_loss = loss_fn(x_reconstructed, x)
             kl_divergence = - torch.sum(1 + torch.log(sd.pow(2)) - mu.pow(2) - sd.pow(2))
 
             # backpropagation
-            loss = a * reconstruction_loss + b * kl_divergence
+            loss = a * reconstruction_loss + b * kl_divergence  # compute loss
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
