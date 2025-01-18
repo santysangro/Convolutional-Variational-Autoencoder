@@ -4,8 +4,9 @@ from torch import nn
 
 
 # Input image --> hidden dimension --> mean, sd --> Parametrization trick --> decoder --> output dim
-class VariationalAutoEncoder:
+class VariationalAutoEncoder(nn.Module):
     def __init__(self, image_size, z_dim=128):
+        super(VariationalAutoEncoder, self).__init__()
 
         self.encoder = nn.Sequential(
             nn.Conv2d(3, 32, kernel_size=4, stride=2, padding=1),
