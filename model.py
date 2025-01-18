@@ -1,25 +1,38 @@
-# This is a sample Python script to create a Variational Autoencoder.
+# This is a sample Python script to create a Convolutional Variational Autoencoder.
 import torch
 from torch import nn
 
 
 # Input image --> hidden dimension --> mean, sd --> Parametrization trick --> decoder --> output dim
 class VariationalAutoEncoder:
-    def __init__(self, input_dim, hid_dim=200, z_dim=20):
+    def __init__(self, image_size, z_dim=128):
+
         self.encoder = nn.Sequential(
-            nn.Linear(input_dim, hid_dim),
-            nn.ReLU()
+            nn.Conv2d(3, 32, kernel_size=4, stride=2, padding=1),
+            nn.ReLU(),
+            nn.Conv2d(32, 64, kernel_size=4, stride=2, padding=1),
+            nn.ReLU(),
+            nn.Conv2d(64, 128, kernel_size=4, stride=2, padding=1),
+            nn.ReLU(),
+            nn.Flatten()
         )
 
+        hid_dim = image_size * 16 * 16
         # This will push it towards standard gaussian
         self.hd_to_mean = nn.Linear(hid_dim, z_dim)
         self.hd_to_sd = nn.Linear(hid_dim, z_dim)
 
+        self.fc = nn.Linear(z_dim, image_size * 8 * 8)
+
         self.decoder = nn.Sequential(
-            nn.Linear(z_dim, hid_dim),
+            nn.ConvTranspose2d(z_dim, 64, kernel_size=4, stride=2, padding=1),
             nn.ReLU(),
-            nn.Linear(hid_dim, input_dim),
-            nn.Sigmoid()
+            nn.ConvTranspose2d(64, 32, kernel_size=4, stride=2, padding=1),
+            nn.ReLU(),
+            nn.ConvTranspose2d(32, 16, kernel_size=4, stride=2, padding=1),
+            nn.ReLU(),
+            nn.ConvTranspose2d(16, 3, kernel_size=4, stride=2, padding=1),
+            nn.Sigmoid(),
         )
 
     def parameters(self):
@@ -38,6 +51,8 @@ class VariationalAutoEncoder:
 
     def decode(self, z):
         # p_theta(x|z)
+        z = self.fc(z)
+        z = z.view(-1, 128, 8, 8)
         return self.decoder(z)
 
     def forward(self, x):
@@ -47,11 +62,3 @@ class VariationalAutoEncoder:
         x_reconstructed = self.decode(z_reparametrized)
         return x_reconstructed, mu, sd
 
-
-if __name__ == "__main__":
-    x = torch.randn(4, 28 * 28)
-    vae = VariationalAutoEncoder(input_dim=784)
-    x_reconstructed, mu, sd = vae.forward(x)
-    print(x_reconstructed.shape)
-    print(mu.shape)
-    print(sd.shape)

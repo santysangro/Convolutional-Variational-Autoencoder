@@ -1,6 +1,6 @@
-# Variational Autoencoder (VAE)
+# Convolutional Variational Autoencoder (VAE)
 
-This repository contains an implementation of a Variational Autoencoder (VAE) using PyTorch. The project trains the VAE on the CelebA dataset and generates realistic face images.
+This repository contains an implementation of a Convolutional Variational Autoencoder (VAE) using PyTorch. The project trains the VAE on the CelebA dataset and generates realistic face images.
 
 ## Features
 - Variational Autoencoder implementation in PyTorch
@@ -12,7 +12,7 @@ This repository contains an implementation of a Variational Autoencoder (VAE) us
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/VariationalAutoencoder.git
+   git clone https://github.com/santysangro/Convolutional-Variational-Autoencoder.git
    cd VariationalAutoencoder
    
 
