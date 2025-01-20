@@ -8,30 +8,40 @@ class VariationalAutoEncoder(nn.Module):
         super(VariationalAutoEncoder, self).__init__()
 
         self.encoder = nn.Sequential(
-            nn.Conv2d(3, 32, kernel_size=4, stride=2, padding=1),
-            nn.ReLU(),
-            nn.Conv2d(32, 64, kernel_size=4, stride=2, padding=1),
-            nn.ReLU(),
+            nn.Conv2d(3, 64, kernel_size=4, stride=2, padding=1),
+            nn.BatchNorm2d(64),
+            nn.LeakyReLU(0.2, inplace=True),
             nn.Conv2d(64, 128, kernel_size=4, stride=2, padding=1),
-            nn.ReLU(),
-            nn.Flatten()
+            nn.BatchNorm2d(128),
+            nn.LeakyReLU(0.2, inplace=True),
+            nn.Conv2d(128, 256, kernel_size=4, stride=2, padding=1),
+            nn.BatchNorm2d(256),
+            nn.LeakyReLU(0.2, inplace=True),
+            nn.Conv2d(256, 512, kernel_size=4, stride=2, padding=1),
+            nn.BatchNorm2d(512),
+            nn.LeakyReLU(0.2, inplace=True),
+            nn.Flatten(),
         )
 
-        hid_dim = image_size * 16 * 16
-        self.hd_to_mean = nn.Linear(hid_dim, z_dim)
-        self.hd_to_sd = nn.Linear(hid_dim, z_dim)
+        # Fully connected layers for latent space
+        self.hid_dim = 512 * (image_size // 16) * (image_size // 16)
+        self.hd_to_mean = nn.Linear(self.hid_dim, z_dim)
+        self.hd_to_sd = nn.Linear(self.hid_dim, z_dim)
+        self.fc = nn.Linear(z_dim, self.hid_dim)
 
-        self.fc = nn.Linear(z_dim, image_size * 8 * 8)
-
+        # Decoder
         self.decoder = nn.Sequential(
-            nn.ConvTranspose2d(z_dim, 64, kernel_size=4, stride=2, padding=1),
-            nn.ReLU(),
-            nn.ConvTranspose2d(64, 32, kernel_size=4, stride=2, padding=1),
-            nn.ReLU(),
-            nn.ConvTranspose2d(32, 16, kernel_size=4, stride=2, padding=1),
-            nn.ReLU(),
-            nn.ConvTranspose2d(16, 3, kernel_size=4, stride=2, padding=1),
-            nn.Sigmoid(),
+            nn.ConvTranspose2d(512, 256, kernel_size=4, stride=2, padding=1),
+            nn.BatchNorm2d(256),
+            nn.ReLU(inplace=True),
+            nn.ConvTranspose2d(256, 128, kernel_size=4, stride=2, padding=1),
+            nn.BatchNorm2d(128),
+            nn.ReLU(inplace=True),
+            nn.ConvTranspose2d(128, 64, kernel_size=4, stride=2, padding=1),
+            nn.BatchNorm2d(64),
+            nn.ReLU(inplace=True),
+            nn.ConvTranspose2d(64, 3, kernel_size=4, stride=2, padding=1),
+            nn.Sigmoid(),  # Output in [0, 1]
         )
 
     def parameters(self):
@@ -51,7 +61,7 @@ class VariationalAutoEncoder(nn.Module):
     def decode(self, z):
         # p_theta(x|z)
         z = self.fc(z)
-        z = z.view(-1, 128, 8, 8)
+        z = z.view(-1, 512, 8, 8)
         return self.decoder(z)
 
     def forward(self, x):
