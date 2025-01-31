@@ -26,7 +26,7 @@ To train the model:
 ```
 To generate images with specified attributes: 
 ```
-   python scripts/inference.py --num-images 5 --attribute Similing #To generate images
+   python scripts/inference.py --num-images 5 --attribute Similing
 ```
 
 ## Dataset
