@@ -27,7 +27,7 @@ To train the model:
 To generate images with specified attributes: 
 ```
    python scripts/inference.py --num-images 5 --attribute Similing #To generate images
-
+```
 
 ## Dataset
 Download the CelebA dataset from [this link](https://mmlab.ie.cuhk.edu.hk/projects/CelebA.html) and place it in the `dataset/` directory.
