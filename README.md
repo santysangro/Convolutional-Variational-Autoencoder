@@ -9,8 +9,12 @@ This repository contains an implementation of a Convolutional Variational Autoen
 - Progress tracking with `tqdm`
 - Possible to specify parameter "attribute" in order to generate images with one of the 40 specified attributes form the dataset.  
 ## Installation
-
-1. Clone the repository:
+0. This project is coded in Python. For installation, please consult: https://www.python.org/.
+If Python version is lower than 3.14, pip might need to be installed separately. Try the following command, or visit https://pypi.org/project/pip/.
+   ```
+   python -m ensurepip --upgrade
+   ```
+2. Clone the repository:
    ```bash
    git clone https://github.com/santysangro/Convolutional-Variational-Autoencoder.git
    cd Convolutional-Variational-Autoencoder  
