@@ -18,8 +18,14 @@ If Python version is lower than 3.14, pip might need to be installed separately.
    ```bash
    git clone https://github.com/santysangro/Convolutional-Variational-Autoencoder.git
    cd Convolutional-Variational-Autoencoder  
-   pip install -r requirements.txt 
-   python scripts/train.py #To train the model
+   pip install -r requirements.txt
+## Running
+To train the model: 
+```
+   python scripts/train.py 
+```
+To generate images with specified attributes: 
+```
    python scripts/inference.py --num-images 5 --attribute Similing #To generate images
 
 
